@@ -157,7 +157,7 @@
               </tbody>
               <tfoot>
                 <tr>
-                  <td colspan="2"><a href="<?php echo site_url('Agent/geneQuoteag'); ?>" class="btn btn-warning"><strong> Add Product</strong></a></td>
+                  <td colspan="2"><a href="<?php echo site_url('Agent/geneQuote'); ?>" class="btn btn-warning"><strong> Add Product</strong></a></td>
                   <?php echo form_open("Agent/quotation"); ?>
                   <td colspan="2">Extra Commission :<?php echo form_input(['type' => 'number', 'id' => 'commission', 'name' => 'comm', 'value' => '0']); ?><?php echo form_submit(['class' => 'btn btn-primary', 'type' => 'submit', 'value' => 'Update']); ?></td>
                   </form>
