@@ -93,7 +93,7 @@ class Finance extends CI_Controller
 
       $config['upload_path'] = 'assets/images/customerDocument/';
       $config['file_name'] = $fileName;
-      $config['allowed_types'] = 'pdf';
+      $config['allowed_types'] = 'pdf|jpg|jpeg|png';
 
       $this->load->library('upload', $config);
       $this->upload->initialize($config);
@@ -125,8 +125,7 @@ class Finance extends CI_Controller
   {
     $id = str_replace(" ", "/", $this->input->get('id'));
     $result = $this->fm->getDocumentData($id);
-    $documentDetail['data'][] = array();
-    if (!empty($result)) {
+    if (!empty($result) && sizeof($result) > 0) {
       foreach ($result['document'] as $key => $value) {
         $documentDetail['data'][] = array(
           'document_id' =>  $value['document_id'],
@@ -135,6 +134,9 @@ class Finance extends CI_Controller
           'document' => $value['document'],
         );
       }
+    }
+    if (empty($documentDetail['data'])) {
+      $documentDetail['data'][] = null;
     }
     echo json_encode($documentDetail);
   }
