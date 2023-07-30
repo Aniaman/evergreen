@@ -24,7 +24,7 @@ class Agentmodel extends CI_model
 	public function updateAgent($id, array $product)
 	{
 		return $this->db->where('id', $id)
-			->update('Agent', $product);
+			->update('agent', $product);
 	}
 	public function getnewenquiry()
 	{

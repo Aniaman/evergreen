@@ -892,7 +892,7 @@ class Admin extends CI_Controller
 		$data['quotation'] = $this->General_model->fetch_data('enquiry', array('quoid' => "", 'AgentId !=' => ''), null, array('id' => 'DESC'));
 
 		foreach ($data['quotation'] as $key =>  $value) {
-			$data['quotation'][$key]['agent'] = $this->General_model->fetch_single_data('Agent', array('id' => $value['AgentId']));
+			$data['quotation'][$key]['agent'] = $this->General_model->fetch_single_data('agent', array('id' => $value['AgentId']));
 		}
 		$this->load->view('Admin/quotationNotCreated', $data);
 	}
