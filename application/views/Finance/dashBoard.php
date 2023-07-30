@@ -396,18 +396,20 @@ if ($error = $this->session->flashdata('fail')) { ?>
           alert(" Can't do because: " + error);
         },
         success: function(response) {
-
-          let paymentTermData = '';
-          response.data.map((e) => {
-            paymentTermData = paymentTermData + `<tr class="table-success">
+          console.log(response.data);
+          if (response.data != "") {
+            let paymentTermData = '';
+            response.data.map((e) => {
+              paymentTermData = paymentTermData + `<tr class="table-success">
                       <td>${i++}</td>
                       <td>${e.projectId}</td>
                       <td>${e.documentName}</td>
                       <td><a href="<?= base_url('assets/images/customerDocument/'); ?>${e.document}" target ="_blank"><i class="fa fa-eye"></a></td>
                       </tr>`;
-            console.log(paymentTermData);
-          });
-          $('#customerDocument').html(paymentTermData);
+              console.log(paymentTermData);
+            });
+            $('#customerDocument').html(paymentTermData);
+          }
         }
 
       });
