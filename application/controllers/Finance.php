@@ -21,7 +21,7 @@ class Finance extends CI_Controller
 
   public function dashboard()
   {
-    $condition = array('Status' => "Process");
+    $condition = array();
     $projectData['projectData'] = $this->gm->fetch_data('project', $condition, null, array('id' => 'DESC'));
     $index = 0;
     foreach ($projectData['projectData'] as $key => $value) {

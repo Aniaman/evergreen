@@ -21,6 +21,14 @@ include 'navigation.php'; ?>
 
                     <dt class="col-sm-4">Quotation No</dt>
                     <dd class="col-sm-8"><?= $projectData['quotationId']; ?></dd>
+                    <dt class="col-sm-4">Project Status</dt>
+                    <dd class="col-sm-8"><?php if ($projectData['Status'] == "Process") { ?>
+                        <span class="badge badge-danger"><?= $projectData['Status'] ?></span>
+                      <?php } else { ?>
+                        <span class="badge badge-success"><?= $projectData['Status'] ?></span>
+
+                      <?php }  ?>
+                    </dd>
 
                     <dt class="col-sm-4">Customer Name</dt>
                     <dd class="col-sm-8"><?= $projectData['EnquiryData']['cName']; ?></dd>

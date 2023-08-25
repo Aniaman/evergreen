@@ -116,6 +116,7 @@
             <th>#</th>
             <th>Project No</th>
             <th>Quotation No</th>
+            <th>Status</th>
             <th>Quotation For</th>
             <th>Customer Name</th>
             <th>Email</th>
@@ -125,7 +126,6 @@
             <th>Project cost</th>
             <th>Amount Paid</th>
             <th>Amount Due</th>
-            <th>Status</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -141,6 +141,13 @@
                 <th><?= $rowNo++; ?></th>
                 <td><?= $value['projectId'];  ?></td>
                 <td><?= $value['quotationId']  ?></td>
+                <td class=""><?php if ($value['Status'] == "Process") { ?>
+                    <span class="badge badge-danger"><?= $value['Status'] ?></span>
+                  <?php } else { ?>
+                    <span class="badge badge-success"><?= $value['Status'] ?></span>
+
+                  <?php }  ?>
+                </td>
                 <td><?= $value['EnquiryData']['KW'] . " " . $value['EnquiryData']['unit'] . " " . $value['EnquiryData']['Grid'] . " System";  ?></td>
                 <td><?= $value['EnquiryData']['cName']  ?></td>
                 <td><?= $value['EnquiryData']['email']  ?></td>
@@ -150,7 +157,7 @@
                 <td><?= number_format($value['quotationData']['NetAmount'], 2)  ?></td>
                 <td> <?= $value['amountPaid']['paidAmount'] != "" ? $value['amountPaid']['paidAmount'] : 0  ?></td>
                 <td><?= $value['amountPaid']['paidAmount'] != "" ? number_format($value['quotationData']['NetAmount']  - $value['amountPaid']['paidAmount'], 2) : 0  ?></td>
-                <td class=""><?= $value['Status']  ?></td>
+
                 <td class="d-flex justify-content-around"><a href="<?= base_url('View-Project-Details?id=') . base64_encode($id);  ?>"><i class="fas fa-eye"></i></a>
                   <a href="<?php echo site_url("Download-PDF/{$value['quoitemData']['id']}"); ?>" class="btn btn-primary"><i class="fas fa-download"></i></a>
                 </td>

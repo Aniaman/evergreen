@@ -1069,7 +1069,7 @@ class Agent extends CI_Controller
 
 	public function projectList()
 	{
-		$condition = array('Status' => "Process");
+		$condition = array();
 		$projectData['projectData'] = $this->General_model->fetch_data('project', $condition, '', array('id' => 'desc'));
 		$index = 0;
 		foreach ($projectData['projectData'] as $key => $value) {
@@ -1153,7 +1153,7 @@ class Agent extends CI_Controller
 		$id = base64_decode($this->input->get('id'));
 		$projectId = str_replace(":", "/", $id);
 
-		$condition = array('Status' => "Process", "projectId" => $projectId);
+		$condition = array("projectId" => $projectId);
 		$projectData['projectData'] = $this->General_model->fetch_single_data('project', $condition);
 
 		$projectData['projectData']['quotationData'] = $this->General_model->fetch_single_data('quotation', array('projectCreated' => 1, 'quotationId' => $projectData['projectData']['quotationId']));
@@ -1175,9 +1175,7 @@ class Agent extends CI_Controller
 		}
 		$projectData['projectData']['bom'] = $product;
 		$projectData['projectData']['document'] = $this->Agentmodel->getDocumentData($projectId);
-		// echo "<pre>";
-		// print_r($projectData);
-		// die;
+
 		$this->load->view('Agent/projectDetails', $projectData);
 	}
 
