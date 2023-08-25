@@ -244,10 +244,15 @@ if ($error = $this->session->flashdata('fail')) { ?>
 
                     <td class=""> <?= $value['amountPaid']['paidAmount'] != "" ? $value['amountPaid']['paidAmount'] : 0; ?></td>
 
+                    <td><?= $value['amountPaid']['paidAmount'] != "" ? number_format(($value['quotationData']['NetAmount']) - $value['amountPaid']['paidAmount'], 2) : number_format($value['quotationData']['NetAmount'], 2); ?></td>
 
-                    <td class=""><?= $value['amountPaid']['paidAmount'] != "" ? number_format(($value['quotationData']['NetAmount']) - $value['amountPaid']['paidAmount'], 2) : number_format($value['quotationData']['NetAmount'], 2); ?></td>
+                    <td><?php if ($value['Status'] == "Process") { ?>
+                        <span class="badge badge-soft-danger"><?= $value['Status'] ?></span>
+                      <?php } else { ?>
+                        <span class="badge badge-soft-primary"><?= $value['Status'] ?></span>
 
-                    <td class=""><?= $value['Status']  ?></td>
+                      <?php }  ?>
+                    </td>
                     <td><a class="view_payment_details" payId="<?= $id; ?>"><i class="fas fa-long-arrow-alt-right"></i></a></td>
                     <?php if (!empty($value['EnquiryData'])) { ?>
                       <td><a class="view_details" cName="<?= $value['EnquiryData'] != "" ? $value['EnquiryData']['cName'] : ""  ?>" email="<?= $value['EnquiryData'] != "" ? $value['EnquiryData']['email'] : ""  ?>" projectName="<?= $projectName; ?>" reId="<?= $id; ?>"><i class="fas fa-pencil-alt"></i></a></td>

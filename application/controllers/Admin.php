@@ -732,7 +732,7 @@ class Admin extends CI_Controller
 	{
 		if (!$this->session->userdata('admin_id'))
 			return redirect('Admin/index');
-		$condition = array('Status' => "Process");
+		$condition = array();
 		$projectData['projectData'] = $this->General_model->fetch_data('project', $condition);
 		$index = 0;
 		foreach ($projectData['projectData'] as $key => $value) {
@@ -753,7 +753,7 @@ class Admin extends CI_Controller
 		$id = base64_decode($this->input->get('id'));
 		$projectId = str_replace(":", "/", $id);
 
-		$condition = array('Status' => "Process", "projectId" => $projectId);
+		$condition = array("projectId" => $projectId);
 		$projectData['projectData'] = $this->General_model->fetch_single_data('project', $condition);
 
 		$projectData['projectData']['quotationData'] = $this->General_model->fetch_single_data('quotation', array('projectCreated' => 1, 'quotationId' => $projectData['projectData']['quotationId']));

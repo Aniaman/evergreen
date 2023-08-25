@@ -22,6 +22,11 @@
   <link href="<?php base_url(); ?>assets/plugins/daterangepicker/daterangepicker.css" rel="stylesheet" type="text/css" />
   <link href="<?php base_url(); ?>assets/css/app.min.css" rel="stylesheet" type="text/css" />
 
+  <link href="<?php base_url('assets/plugins/datatables/dataTables.bootstrap5.min.css') ?>" rel="stylesheet" type="text/css" />
+  <link href="<?php base_url('assets/plugins/datatables/buttons.bootstrap5.min.css') ?>" rel="stylesheet" type="text/css" />
+  <!-- Responsive datatable examples -->
+  <link href="<?php base_url('assets/plugins/datatables/responsive.bootstrap4.min.css') ?>" rel="stylesheet" type="text/css" />
+
 </head>
 
 <body class="">
