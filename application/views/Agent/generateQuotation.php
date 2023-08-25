@@ -2,9 +2,9 @@
 $this->load->library('session');
 $Agid = $this->session->agent_id;
 ?>
-<?php include 'header.php'; ?>
-<?php include 'topHeader.php'; ?>
-<?php include 'navigation.php'; ?>
+<?php include 'header.php';
+include 'topHeader.php';
+include 'navigation.php'; ?>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
   $(document).ready(function() {
@@ -16,12 +16,6 @@ $Agid = $this->session->agent_id;
     });
   });
 </script>
-<style>
-  table th,
-  td {
-    white-space: nowrap;
-  }
-</style>
 <div class="content-wrapper">
   <!-- Main content -->
   <div class="card">
@@ -29,7 +23,7 @@ $Agid = $this->session->agent_id;
       <strong>
         <h2 class="card-title">Generate Quotation</h2>
       </strong>
-      <form class="form-inline" style="padding-left: 60%;">
+      <form class="form-inline float-right">
         <input type="search" class="form-control" area-label="Search" name="" id="myInput" placeholder="search">
       </form>
     </div>
@@ -49,12 +43,12 @@ $Agid = $this->session->agent_id;
     <?php } ?>
     <!-- /.card-header -->
     <div class="card-body">
-      <table id="example1" class="table">
+      <table id="example2" class="table table-bordered table-hover">
         <thead class="text-center">
           <tr>
             <th>SL No</th>
-            <th>Enquiry Id</th>
             <th>Name</th>
+            <th>Enquiry Id</th>
             <th>Phone</th>
             <th>Billing Address</th>
             <th>Shipping Address</th>
@@ -66,38 +60,29 @@ $Agid = $this->session->agent_id;
           </tr>
         </thead>
         <tbody id="myTable">
-          <tr>
-            <?php
-            $s = 1;
+          <?php
+          $s = 1;
+          if (isset($details)) {
             foreach ($details as $value) { ?>
-          <tr>
-            <td><?php echo $s; ?></td>
-            <td><?php echo $value['EnqId']; ?></td>
-            <td><?php echo $value['cName']; ?></td>
-            <td><?php echo $value['phone']; ?></td>
-            <td><?php echo $value['billAddress1'] . "," . $value['billAddress2'] . "," . $value['billstate'] . "," . $value['billPin']; ?></td>
-            <td><?php echo $value['shipAddress1'] . "," . $value['shipAddress2'] . "," . $value['shipState'] . "," . $value['shipPin']; ?></td>
-            <td><?php echo $value['quantity']; ?></td>
-            <td><?php echo $value['Grid']; ?></td>
-            <td><?php echo $value['KW']; ?></td>
-            <td><?php echo $value['unit']; ?></td>
-            <td>
-              <?php
-              echo form_open('Agent/geneQuote');
-              echo form_hidden('id', $value['id']);
-              echo form_hidden('eid', $value['EnqId']);
-              echo form_submit(['name' => 'update', 'value' => 'Make Quotation', 'class' => 'btn btn-success']);
-              echo form_close();
-
-              ?>
-            </td>
-          </tr>
-        <?php $s++;
+              <tr>
+                <td><?php echo $s; ?></td>
+                <td><?php echo $value['cName'] != "" ? $value['cName'] : ""; ?></td>
+                <td><?php echo $value['EnqId'] != "" ? $value['EnqId'] : ""; ?></td>
+                <td><?php echo $value['phone'] != "" ? $value['phone'] : ""; ?></td>
+                <td><?php echo $value['billAddress1']  . "," . $value['billAddress2']  . "," . $value['billstate']  . "," . $value['billPin']; ?></td>
+                <td><?php echo $value['shipAddress1']  . "," . $value['shipAddress2']  . "," . $value['shipState']  . "," . $value['shipPin']; ?></td>
+                <td><?php echo $value['quantity'] != "" ? $value['quantity'] : ""; ?></td>
+                <td><?php echo $value['Grid'] != "" ? $value['Grid'] : ""; ?></td>
+                <td><?php echo $value['KW'] != "" ? $value['KW'] : ""; ?></td>
+                <td><?php echo $value['unit'] != "" ? $value['unit'] : ""; ?></td>
+                <td style=" white-space: nowrap;"><a href="<?= base_url("Quotation-Process/{$value['EnqId']}") ?>" class="btn btn-success">Make Quotation</a>
+                </td>
+              </tr>
+          <?php $s++;
             }
+          }
 
-
-        ?>
-        </tr>
+          ?>
         </tbody>
       </table>
     </div>
@@ -106,5 +91,23 @@ $Agid = $this->session->agent_id;
   <!-- /.card -->
 </div>
 <!-- /.col -->
-
+<script>
+  $(function() {
+    $("#example1").DataTable({
+      "responsive": true,
+      "lengthChange": false,
+      "autoWidth": false,
+      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    $('#example2').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false,
+      "responsive": true,
+    });
+  });
+</script>
 <?php include 'footer.php'; ?>

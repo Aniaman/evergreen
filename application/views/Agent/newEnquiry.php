@@ -1,9 +1,8 @@
 <?php
 $this->load->library('session');
 $Agid = $this->session->agent_id;
-?>
-<?php include 'header.php'; ?>
-<?php include 'navigation.php'; ?>
+include 'header.php';
+include 'navigation.php'; ?>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
   $(document).ready(function() {
@@ -15,7 +14,12 @@ $Agid = $this->session->agent_id;
     });
   });
 </script>
-
+<style>
+  table th,
+  td {
+    white-space: nowrap;
+  }
+</style>
 <div class="modal fade" id="modal-default">
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
@@ -281,12 +285,12 @@ $Agid = $this->session->agent_id;
     <?php } ?>
     <!-- /.card-header -->
     <div class="card-body">
-      <table id="example1" class="table table-bordered table-striped">
+      <table id="example2" class="table table-bordered table-hover">
         <thead class="text-center">
           <tr>
             <th>SL No</th>
-            <th>Enquiry Id</th>
             <th>Name</th>
+            <th>Enquiry Id</th>
             <th>Email</th>
             <th>Billing Address</th>
             <th>Shipping Address</th>
@@ -296,48 +300,31 @@ $Agid = $this->session->agent_id;
             <th>Unit</th>
             <th>Remark</th>
             <th>Created Date</th>
-            <th colspan="2">Action</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody id="myTable">
-          <tr>
-            <?php
-            $s = 1;
-            foreach ($details as $value) { ?>
-          <tr>
-            <td><?php echo $s; ?></td>
-            <td><?php echo $value['EnqId']; ?></td>
-            <td><?php echo $value['cName']; ?></td>
-            <td><?php echo $value['email']; ?></td>
-            <td><?php echo $value['billAddress1'] . "," . $value['billAddress2'] . "," . $value['billstate'] . "," . $value['billPin']; ?></td>
-            <td><?php echo $value['shipAddress1'] . "," . $value['shipAddress2'] . "," . $value['shipState'] . "," . $value['shipPin']; ?></td>
-            <td><?php echo $value['quantity']; ?></td>
-            <td><?php echo $value['Grid']; ?></td>
-            <td><?php echo $value['KW']; ?></td>
-            <td><?php echo $value['unit']; ?></td>
-            <td><?php echo $value['remark']; ?></td>
-            <td><?php echo $value['created_at'] != "" ? date_format(date_create($value['created_at']), 'd-m-Y')  : ""; ?></td>
-            <td>
-              <?php
-              if ($value['AgentId'] == "") {
-                echo form_open('Agent/AcceptEnq');
-                echo form_hidden('id', $value['id']);
-                echo form_hidden('Agid', $Agid);
-                echo form_submit(['name' => 'update', 'value' => 'Accept', 'class' => 'btn btn-success']);
-                echo form_close();
-              } else {
-                $this->session->set_flashdata('Message', 'Enquiry Already accepted by another Agent.');
-                return redirect('Agent/newenquiry');
-              }
-              ?>
-            </td>
-          </tr>
-        <?php $s++;
-            }
-
-
-        ?>
-        </tr>
+          <?php
+          $s = 1;
+          foreach ($details as $value) { ?>
+            <tr>
+              <td><?php echo $s; ?></td>
+              <td><?php echo $value['cName']; ?></td>
+              <td><?php echo $value['EnqId']; ?></td>
+              <td><?php echo $value['email']; ?></td>
+              <td><?php echo $value['billAddress1'] . "," . $value['billAddress2'] . "," . $value['billstate'] . "," . $value['billPin']; ?></td>
+              <td><?php echo $value['shipAddress1'] . "," . $value['shipAddress2'] . "," . $value['shipState'] . "," . $value['shipPin']; ?></td>
+              <td><?php echo $value['quantity']; ?></td>
+              <td><?php echo $value['Grid']; ?></td>
+              <td><?php echo $value['KW']; ?></td>
+              <td><?php echo $value['unit']; ?></td>
+              <td><?php echo $value['remark']; ?></td>
+              <td><?php echo $value['created_at'] != "" ? date_format(date_create($value['created_at']), 'd-m-Y')  : ""; ?></td>
+              <td><a href="<?php echo  base_url("Accept-Enquiry/{$value['id']}")  ?>" class="btn btn-success">Accept</a></td>
+            </tr>
+          <?php $s++;
+          }
+          ?>
         </tbody>
       </table>
     </div>
@@ -416,6 +403,23 @@ $Agid = $this->session->agent_id;
 
         }
       });
+    });
+  });
+  $(function() {
+    $("#example1").DataTable({
+      "responsive": true,
+      "lengthChange": false,
+      "autoWidth": false,
+      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    $('#example2').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false,
+      "responsive": true,
     });
   });
 </script>

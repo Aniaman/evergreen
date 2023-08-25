@@ -104,9 +104,8 @@ class Agent extends CI_Controller
 	public function AcceptEnq()
 	{
 		$post = $this->input->post();
-		$id = $this->input->post('id');
-		$Agid = $this->input->post('Agid');
-
+		$id =  $this->uri->segment(2);
+		$Agid = $this->session->agent_id;
 		$rt = $this->Agentmodel->AcceptEnquiry($id, $post, $Agid); {
 			$this->session->set_flashdata('update', 'Enquiry Accept Sucessfully. Please check your All Enquiry & for making Quotation Go To Quotation.');
 			return redirect('Agent/newenquiry');
@@ -129,8 +128,12 @@ class Agent extends CI_Controller
 	public function geneQuote()
 	{
 		$id = $this->session->agent_id;
-		$eid = $this->input->post('eid');
-		$this->session->set_userdata('enq_id', $eid);
+		$this->load->library('cart');
+		if (empty($this->cart->contents())) {
+			$eid = $this->uri->segment(2);
+			$this->session->set_userdata('enq_id', $eid);
+		}
+
 
 		$data['details'] = $this->Agentmodel->getProductWithCategory();
 		$data['category'] = $this->General_model->fetch_data('productcategory', array());
@@ -168,7 +171,7 @@ class Agent extends CI_Controller
 
 		if ($added) {
 			$this->session->set_flashdata('add', 'Product Added Successful.');
-			redirect('Agent/finalquote');
+			$this->load->view('Agent/finalquote');
 		} else {
 			$this->session->set_flashdata('error', 'Product Not Added.');
 			redirect('Agent/geneQuote');
@@ -1083,6 +1086,66 @@ class Agent extends CI_Controller
 		// print_r($projectData);
 		// die;
 		$this->load->view('Agent/projectList', $projectData);
+	}
+
+	public function bomExportToExcel()
+	{
+		$projectId = base64_decode($this->input->get('id'));
+		$condition = array("projectId" => $projectId);
+		$projectData['projectData'] = $this->General_model->fetch_single_data('project', $condition);
+		$projectData['projectData']['quotationData'] = $this->General_model->fetch_single_data('quotation', array('projectCreated' => 1, 'quotationId' => $projectData['projectData']['quotationId']));
+		$productDataArray = explode(",", $projectData['projectData']['quotationData']['productData']);
+		foreach ($productDataArray as  $value) {
+			$productData[] = explode(':', $value);
+		}
+		foreach ($productData as $key =>  $value) {
+			$condition = array("id" => $value[0]);
+			$product[]  = $this->General_model->fetch_single_data('product', $condition);
+			$product[$key]['warranty'] = sizeof($productData[$key]) == 4 ? $productData[$key][3] : "";
+			$product[$key]['quantity'] = $productData[$key][1];
+			$product[$key]['cost'] = $productData[$key][2];
+		}
+		$this->load->library("excel");
+		$object = new PHPExcel();
+		$object->setActiveSheetIndex(0);
+		$column = 0;
+		$object->getActiveSheet()->SetCellValue('A1',  'Product Name');
+		$object->getActiveSheet()->SetCellValue('B1',  'Supplier');
+		$object->getActiveSheet()->SetCellValue('C1',  'Specification');
+		$object->getActiveSheet()->SetCellValue('D1',  'UOM');
+		$object->getActiveSheet()->SetCellValue('E1',  'Quantity');
+		$object->getActiveSheet()->SetCellValue('F1',  'Rate');
+		$object->getActiveSheet()->SetCellValue('G1',  'Cost');
+		$object->getActiveSheet()->SetCellValue('H1',  'Warranty');
+		$column++;
+
+		$excel_row = 2;
+
+		foreach ($product as $row) {
+
+			$object->getActiveSheet()->SetCellValue('A' . $excel_row, $row['name']);
+			$object->getActiveSheet()->SetCellValue('B' . $excel_row, $row['supplier']);
+			$object->getActiveSheet()->SetCellValue('C' . $excel_row, $row['spec']);
+			$object->getActiveSheet()->SetCellValue('D' . $excel_row, $row['uom']);
+			$object->getActiveSheet()->SetCellValue('E' . $excel_row, $row['quantity']);
+			$object->getActiveSheet()->setCellValue('F' . $excel_row, $row['price']);
+			$object->getActiveSheet()->setCellValue('G' . $excel_row, $row['cost']);
+			$object->getActiveSheet()->setCellValue('H' . $excel_row, $row['warranty']);
+			$excel_row = $excel_row + 1;
+		}
+		$projectNo = str_replace("-", "/", $projectId);
+		$object_writer = PHPExcel_IOFactory::createWriter($object, 'CSV');
+		header('Content-Type: application/vnd.ms-excel');
+		header('Content-Disposition: attachment;filename="BOM For"' . $projectNo . '".csv"');
+		$object_writer->save('php://output');
+	}
+
+	public function updateProjectStatus()
+	{
+		$projectId = $this->input->get('projectId');
+		$status = $this->input->get('status');
+		$update = 	$this->General_model->update('project', array('Status' => $status), array('projectId' => $projectId));
+		echo $update ? 'ok' : 'err';
 	}
 
 	public function projectDetails()

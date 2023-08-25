@@ -29,7 +29,7 @@ $Agid = $this->session->agent_id;
       <strong>
         <h3 class="card-title">Enquiry List</h3>
       </strong>
-      <form class="form-inline" style="padding-left: 70%;">
+      <form class="form-inline float-right">
         <input type="search" class="form-control" area-label="Search" name="" id="myInput" placeholder="search">
       </form>
     </div>
@@ -49,12 +49,12 @@ $Agid = $this->session->agent_id;
     <?php } ?>
     <!-- /.card-header -->
     <div class="card-body">
-      <table id="example1" class="table table-bordered table-striped">
+      <table id="example2" class="table table-bordered table-hover">
         <thead class="text-center">
           <tr>
             <th>SL No</th>
-            <th>Enquiry Id</th>
             <th>Name</th>
+            <th>Enquiry Id</th>
             <th>Email</th>
             <th>Billing Address</th>
             <th>Shipping Address</th>
@@ -67,30 +67,26 @@ $Agid = $this->session->agent_id;
           </tr>
         </thead>
         <tbody id="myTable">
-          <tr>
-            <?php
-            $s = 1;
-            foreach ($details as $value) { ?>
-          <tr>
-            <td><?php echo $s; ?></td>
-            <td><?php echo $value['EnqId']; ?></td>
-            <td><?php echo $value['cName']; ?></td>
-            <td><?php echo $value['email']; ?></td>
-            <td><?php echo $value['billAddress1'] . "," . $value['billAddress2'] . "," . $value['billstate'] . "," . $value['billPin']; ?></td>
-            <td><?php echo $value['shipAddress1'] . "," . $value['shipAddress2'] . "," . $value['shipState'] . "," . $value['shipPin']; ?></td>
-            <td><?php echo $value['quantity']; ?></td>
-            <td><?php echo $value['Grid']; ?></td>
-            <td><?php echo $value['KW']; ?></td>
-            <td><?php echo $value['unit']; ?></td>
-            <td><?php echo $value['remark']; ?></td>
-            <td><?php echo $value['created_at'] != "" ? date_format(date_create($value['created_at']), 'd-m-Y')  : ""; ?></td>
-          </tr>
-        <?php $s++;
-            }
-
-
-        ?>
-        </tr>
+          <?php
+          $s = 1;
+          foreach ($details as $value) { ?>
+            <tr>
+              <td><?php echo $s; ?></td>
+              <td><?php echo $value['cName']; ?></td>
+              <td><?php echo $value['EnqId']; ?></td>
+              <td><?php echo $value['email']; ?></td>
+              <td><?php echo $value['billAddress1'] . "," . $value['billAddress2'] . "," . $value['billstate'] . "," . $value['billPin']; ?></td>
+              <td><?php echo $value['shipAddress1'] . "," . $value['shipAddress2'] . "," . $value['shipState'] . "," . $value['shipPin']; ?></td>
+              <td><?php echo $value['quantity']; ?></td>
+              <td><?php echo $value['Grid']; ?></td>
+              <td><?php echo $value['KW']; ?></td>
+              <td><?php echo $value['unit']; ?></td>
+              <td><?php echo $value['remark']; ?></td>
+              <td><?php echo $value['created_at'] != "" ? date_format(date_create($value['created_at']), 'd-m-Y')  : ""; ?></td>
+            </tr>
+          <?php $s++;
+          }
+          ?>
         </tbody>
       </table>
     </div>
@@ -99,5 +95,23 @@ $Agid = $this->session->agent_id;
   <!-- /.card -->
 </div>
 <!-- /.col -->
-
+<script>
+  $(function() {
+    $("#example1").DataTable({
+      "responsive": true,
+      "lengthChange": false,
+      "autoWidth": false,
+      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    $('#example2').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false,
+      "responsive": true,
+    });
+  });
+</script>
 <?php include 'footer.php'; ?>
