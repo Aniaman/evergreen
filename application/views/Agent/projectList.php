@@ -110,23 +110,23 @@
     <?php } ?>
     <!-- /.card-header -->
     <div class="card-body">
-      <table id="example1" class="table table-bordered table-striped table-responsive">
+      <table id="example1" class="table table-bordered table-striped">
         <thead>
           <tr>
-            <th scope="col">#</th>
-            <th scope="col">Project No</th>
-            <th scope="col">Quotation No</th>
-            <th scope="col">Quotation For</th>
-            <th scope="col">Customer Name</th>
-            <th scope="col">Email</th>
-            <th scope="col">Phone No</th>
-            <th scope="col">Quantity</th>
-            <th scope="col">Project DeadLine</th>
-            <th scope="col">Project cost</th>
-            <th scope="col">Amount Paid</th>
-            <th scope="col">Amount Due</th>
-            <th scope="col">Status</th>
-            <th colspan="2">Action</th>
+            <th>#</th>
+            <th>Project No</th>
+            <th>Quotation No</th>
+            <th>Quotation For</th>
+            <th>Customer Name</th>
+            <th>Email</th>
+            <th>Phone No</th>
+            <th>Quantity</th>
+            <th>Project DeadLine</th>
+            <th>Project cost</th>
+            <th>Amount Paid</th>
+            <th>Amount Due</th>
+            <th>Status</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody id="myTable">
@@ -138,21 +138,22 @@
               $id = str_replace("/", ":", $value['projectId']);
           ?>
               <tr>
-                <th scope="row"><?= $rowNo++; ?></th>
-                <td class=""><?= $value['projectId'];  ?></td>
-                <td class=""><?= $value['quotationId']  ?></td>
-                <td class=""><?= $value['EnquiryData']['KW'] . " " . $value['EnquiryData']['unit'] . " " . $value['EnquiryData']['Grid'] . " System";  ?></td>
-                <td class=""><?= $value['EnquiryData']['cName']  ?></td>
-                <td class=""><?= $value['EnquiryData']['email']  ?></td>
-                <td class=""><?= $value['EnquiryData']['phone']  ?></td>
-                <td class=""><?= $value['EnquiryData']['quantity']  ?></td>
-                <td class=""> <?= $value['projectDeadLine']  ?></td>
-                <td class=""><?= number_format($value['quotationData']['NetAmount'], 2)  ?></td>
-                <td class=""> <?= $value['amountPaid']['paidAmount'] != "" ? $value['amountPaid']['paidAmount'] : 0  ?></td>
-                <td class=""><?= $value['amountPaid']['paidAmount'] != "" ? number_format($value['quotationData']['NetAmount']  - $value['amountPaid']['paidAmount'], 2) : 0  ?></td>
+                <th><?= $rowNo++; ?></th>
+                <td><?= $value['projectId'];  ?></td>
+                <td><?= $value['quotationId']  ?></td>
+                <td><?= $value['EnquiryData']['KW'] . " " . $value['EnquiryData']['unit'] . " " . $value['EnquiryData']['Grid'] . " System";  ?></td>
+                <td><?= $value['EnquiryData']['cName']  ?></td>
+                <td><?= $value['EnquiryData']['email']  ?></td>
+                <td><?= $value['EnquiryData']['phone']  ?></td>
+                <td><?= $value['EnquiryData']['quantity']  ?></td>
+                <td> <?= $value['projectDeadLine']  ?></td>
+                <td><?= number_format($value['quotationData']['NetAmount'], 2)  ?></td>
+                <td> <?= $value['amountPaid']['paidAmount'] != "" ? $value['amountPaid']['paidAmount'] : 0  ?></td>
+                <td><?= $value['amountPaid']['paidAmount'] != "" ? number_format($value['quotationData']['NetAmount']  - $value['amountPaid']['paidAmount'], 2) : 0  ?></td>
                 <td class=""><?= $value['Status']  ?></td>
-                <td><a href="<?= base_url('View-Project-Details?id=') . base64_encode($id);  ?>"><i class="fas fa-eye"></i></a></td>
-                <td><a href="<?php echo site_url("Download-PDF/{$value['quoitemData']['id']}"); ?>" class="btn btn-primary"><i class="fa fa-download"></i></a> </td>
+                <td class="d-flex justify-content-around"><a href="<?= base_url('View-Project-Details?id=') . base64_encode($id);  ?>"><i class="fas fa-eye"></i></a>
+                  <a href="<?php echo site_url("Download-PDF/{$value['quoitemData']['id']}"); ?>" class="btn btn-primary"><i class="fas fa-download"></i></a>
+                </td>
               </tr>
           <?php
             }
@@ -166,5 +167,22 @@
   <!-- /.card -->
 </div>
 <!-- /.col -->
-
+<script>
+  $(function() {
+    $("#example1").DataTable({
+      "responsive": true,
+      "lengthChange": false,
+      "autoWidth": false,
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    $('#example2').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false,
+      "responsive": true,
+    });
+  });
+</script>
 <?php include 'footer.php'; ?>

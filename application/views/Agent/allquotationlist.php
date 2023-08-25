@@ -133,98 +133,89 @@ include 'navigation.php'; ?>
     <?php } ?>
     <!-- /.card-header -->
     <div class="card-body">
-      <div class="table-responsive">
-        <table id="example1" class=" table mb-0 table-bordered table-striped filter-table-data dtHorizontalExample">
-          <thead>
-            <tr id="statusVal">
-              <th>SL No</th>
-              <th>Enquiry Id</th>
-              <th>Quotation ID</th>
-              <th>Customer Name</th>
-              <th>Phone No</th>
-              <th>Email</th>
-              <th>Grid</th>
-              <th>Quantity</th>
-              <th>KW</th>
-              <th>unit</th>
-              <th>Date</th>
-              <th>Reminder</th>
-              <th>Followup</th>
-              <th>
-                <select class="form-control filter-handle">
-                  <option value="">All</option>
+      <table id="example1" class=" table mb-0 table-bordered table-striped filter-table-data dtHorizontalExample">
+        <thead>
+          <tr id="statusVal">
+            <th>SL No</th>
+            <th>Enquiry Id</th>
+            <th>Quotation ID</th>
+            <th>Customer Name</th>
+            <th>Phone No</th>
+            <th>Email</th>
+            <th>Grid</th>
+            <th>Quantity</th>
+            <th>KW</th>
+            <th>unit</th>
+            <th>Date</th>
+            <th>Reminder</th>
+            <th>Followup</th>
+            <th>
+              <select class="form-control filter-handle">
+                <option value="">All</option>
+                <?php
+                foreach ($status as $statusValue) { ?>
+                  <option value="<?= $statusValue['quotationId'] ?>"><?php echo $statusValue['status']; ?></option>
+                <?php   }
+                ?>
+
+              </select>QuotationStatus
+            </th>
+            <th>Total (Without GST and Commission)</th>
+            <th>Commission Rate</th>
+            <th>Commission Amount</th>
+            <th>Net Total (Without GST)</th>
+            <th colspan="7">Action</th>
+          </tr>
+        </thead>
+        <tbody id="myTable">
+          <?php
+          $s = 1;
+          foreach ($details as $value) {
+            $commiAmount = $value['commi'] - $value['total'];
+            $id = $value['id'];
+            $enqId = $value['enqId'];
+
+          ?>
+            <tr data-type="<?php echo $value['quotationStatus']; ?>">
+              <td><?php echo $s; ?></td>
+              <td><?php echo $value['enqId']; ?></td>
+              <td><?php echo $value['quoId']; ?></td>
+              <td><?php echo $value['cName']; ?></td>
+              <td><?php echo $value['phone']; ?></td>
+              <td><?php echo $value['email']; ?></td>
+              <td><?php echo $value['Grid']; ?></td>
+              <td><?php echo $value['quantity']; ?></td>
+              <td><?php echo $value['KW']; ?></td>
+              <td><?php echo $value['unit']; ?></td>
+              <td><?php echo $value['created']; ?></td>
+              <td><?php echo $value['reminderDate'] != "" ? $value['reminderDate'] : ""; ?></td>
+              <td><a href=" <?php echo site_url("Follow-Up-Data/{$value['quoId']}"); ?>">Follow-up report</a></td>
+              <td>
+                <select class="form-control" name="quotation_status" id="quotation_status" onchange="updateOrderStatus(this,<?php echo $value['enqId']; ?>)">
+                  <option id="defaultValue" value="<?= $value['quotationStatus'] ?>"><?php echo $value['status']; ?></option>
                   <?php
                   foreach ($status as $statusValue) { ?>
                     <option value="<?= $statusValue['quotationId'] ?>"><?php echo $statusValue['status']; ?></option>
                   <?php   }
                   ?>
-
-                </select>QuotationStatus
-              </th>
-              <th>Total (Without GST and Commission)</th>
-              <th>Commission Rate</th>
-              <th>Commission Amount</th>
-              <th>Net Total (Without GST)</th>
-              <th colspan="7">Action</th>
+                </select>
+              </td>
+              <td><?php echo number_format(($value['commi'] * $value['quantity']) - $commiAmount, 2); ?></td>
+              <td><?php echo number_format($value['rate'], 2); ?></td>
+              <td><?php echo number_format($commiAmount, 2); ?></td>
+              <td><?php echo number_format(($value['commi'] * $value['quantity']), 2); ?></td>
+              <td><button class="btn btn-info view_detail" relid="<?php echo $value['enqId']; ?>">Reminder</button></td>
+              <td colspan="2"><button class="btn btn-info follow_up" relid="<?php echo $value['enqId']; ?>" quoId="<?php echo $value['quoId']; ?>">FollowUp</button></td>
+              <td><a href=" <?php echo site_url("Agent/viewpdf/{$value['enqId']}"); ?>" class="btn btn-success">View</a> </td>
+              <td><a href="<?php echo site_url("Agent/editquotation?id={$id}"); ?>" class="btn btn-warning">Edit</a> </td>
+              <td><a href="<?php echo site_url("Download-PDF/{$id}"); ?>" class="btn btn-primary">Download</a> </td>
+              <td><a href="<?php echo site_url("Create-Project/{$enqId}"); ?>" class="btn btn-primary">Create Project</a> </td>
             </tr>
-          </thead>
-          <tbody id="myTable">
-            <?php
-            $s = 1;
-            foreach ($details as $value) {
-              $commiAmount = $value['commi'] - $value['total'];
-              $id = $value['id'];
-              $enqId = $value['enqId'];
-
-            ?>
-              <tr data-type="<?php echo $value['quotationStatus']; ?>">
-                <td><?php echo $s; ?></td>
-                <td><?php echo $value['enqId']; ?></td>
-                <td><?php echo $value['quoId']; ?></td>
-                <td><?php echo $value['cName']; ?></td>
-                <td><?php echo $value['phone']; ?></td>
-                <td><?php echo $value['email']; ?></td>
-                <td><?php echo $value['Grid']; ?></td>
-                <td><?php echo $value['quantity']; ?></td>
-                <td><?php echo $value['KW']; ?></td>
-                <td><?php echo $value['unit']; ?></td>
-                <td><?php echo $value['created']; ?></td>
-                <td><?php echo $value['reminderDate'] != "" ? $value['reminderDate'] : ""; ?></td>
-                <td><a href=" <?php echo site_url("Follow-Up-Data/{$value['quoId']}"); ?>">Follow-up report</a></td>
-
-
-                <td>
-                  <select class="form-control" name="quotation_status" id="quotation_status" onchange="updateOrderStatus(this,<?php echo $value['enqId']; ?>)">
-                    <option id="defaultValue" value="<?= $value['quotationStatus'] ?>"><?php echo $value['status']; ?></option>
-                    <?php
-                    foreach ($status as $statusValue) { ?>
-                      <option value="<?= $statusValue['quotationId'] ?>"><?php echo $statusValue['status']; ?></option>
-                    <?php   }
-                    ?>
-
-                  </select>
-                </td>
-
-
-                <td><?php echo number_format(($value['commi'] * $value['quantity']) - $commiAmount, 2); ?></td>
-                <td><?php echo number_format($value['rate'], 2); ?></td>
-                <td><?php echo number_format($commiAmount, 2); ?></td>
-                <td><?php echo number_format(($value['commi'] * $value['quantity']), 2); ?></td>
-                <td><button class="btn btn-info view_detail" relid="<?php echo $value['enqId']; ?>">Reminder</button></td>
-                <td colspan="2"><button class="btn btn-info follow_up" relid="<?php echo $value['enqId']; ?>" quoId="<?php echo $value['quoId']; ?>">FollowUp</button></td>
-                <td><a href=" <?php echo site_url("Agent/viewpdf/{$value['enqId']}"); ?>" class="btn btn-success">View</a> </td>
-                <td><a href="<?php echo site_url("Agent/editquotation?id={$id}"); ?>" class="btn btn-warning">Edit</a> </td>
-                <td><a href="<?php echo site_url("Download-PDF/{$id}"); ?>" class="btn btn-primary">Download</a> </td>
-                <td><a href="<?php echo site_url("Create-Project/{$enqId}"); ?>" class="btn btn-primary">Create Project</a> </td>
-
-
-              </tr>
-            <?php $s++;
-            }
-            ?>
-          </tbody>
-        </table>
-      </div>
+          <?php $s++;
+          }
+          ?>
+        </tbody>
+      </table>
     </div>
     <!-- /.card-body -->
   </div>
@@ -297,7 +288,23 @@ include 'navigation.php'; ?>
       });
     });
   });
-
+  $(function() {
+    $("#example1").DataTable({
+      "responsive": true,
+      "lengthChange": false,
+      "autoWidth": false,
+      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    $('#example2').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false,
+      "responsive": true,
+    });
+  });
 
   CKEDITOR.replace('message', {
     allowedContent: true,

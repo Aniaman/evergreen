@@ -74,6 +74,13 @@ $route['Create-Project-Action'] = 'Agent/createProjectAction';
 $route['Update-Warranty'] = 'Agent/updateWarranty';
 $route['Project-Lists'] = 'Agent/projectList';
 $route['View-Project-Details'] = 'Agent/projectDetails';
+$route['Export-To-Excel'] = 'Agent/bomExportToExcel';
+
+//quotation flow Route in Agent
+$route['Quotation-Process/(:any)'] = 'Agent/geneQuote';
+$route['Accept-Enquiry/(:any)'] = 'Agent/AcceptEnq';
+
+
 
 
 //Admin Route

@@ -71,7 +71,7 @@ include 'navigation.php'; ?>
                     <dd class="col-sm-8"><?= $projectData['quotationData']['termAndCondition']; ?></dd>
 
                   </dl>
-                  <h5 class="mt-5 mb-3"><strong>Bills of Materials</strong></h5>
+                  <h5 class="mt-5 mb-3"><strong>Bills of Materials</strong> <a href="<?= base_url("Export-To-Excel?id=") . base64_encode($projectData['projectId']) ?>" class="btn btn-info">Export To Excel</a> </h5>
                   <table id="example1" class="table table-bordered table-striped">
                     <thead>
                       <tr>
@@ -182,7 +182,15 @@ include 'navigation.php'; ?>
                 <?php
                 }
                 ?>
-
+                <dl class="row mt-5 mb-3">
+                  <dt class="col-sm-4">Project Status</dt>
+                  <dd class="col-sm-4">
+                    <select name="projectStatus" id="" class="form-control" onchange="updateitem(this,'<?php echo $projectData['projectId']; ?>')">
+                      <option value="Process">Process</option>
+                      <option value="Complete">Complete</option>
+                    </select>
+                  </dd>
+                </dl>
               </div>
             </div>
           </div>
@@ -191,5 +199,20 @@ include 'navigation.php'; ?>
     </div>
   </div>
 </div>
-
+<script>
+  function updateitem(obj, projectId) {
+    $.get("<?php echo site_url('Agent/updateProjectStatus/'); ?>", {
+      projectId: projectId,
+      status: obj.value
+    }, function(resp) {
+      console.log(obj.value);
+      console.log(resp);
+      if (resp == 'ok') {
+        toastr.success('Project Status Updated Successfully')
+      } else {
+        toastr.error('Status Update failed...Please try after some time');
+      }
+    });
+  }
+</script>
 <?php include('footer.php'); ?>

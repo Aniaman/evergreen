@@ -65,6 +65,16 @@
     <!-- /.modal-dialog -->
   </div>
 </div>
+<nav class="navbar navbar-expand navbar-white navbar-light">
+  <!-- Left navbar links -->
+  <ul class="navbar-nav">
+    <li class="nav-item">
+    </li>
+    <li class="nav-item d-none d-sm-inline-block ">
+      <a href="<?php echo site_url('Agent/dashboard'); ?>" class="btn btn-success">Dashboard</a>
+    </li>
+  </ul>
+</nav>
 <section class="content">
   <div class="container-fluid">
     <div class="row">
@@ -106,7 +116,7 @@
           </div>
           <!-- /.card-header -->
           <div class="card-body">
-            <table class="table ">
+            <table id="example2" class="table table-bordered table-hover">
               <!-- <table class="table table-head-fixed text-nowrap"> -->
               <thead class="text-center">
                 <tr>
@@ -157,9 +167,9 @@
               </tbody>
               <tfoot>
                 <tr>
-                  <td colspan="2"><a href="<?php echo site_url('Agent/geneQuote'); ?>" class="btn btn-warning"><strong> Add Product</strong></a></td>
+                  <td style=" white-space: nowrap;"><a href="<?php echo site_url('Agent/geneQuote'); ?>" class="btn btn-warning"><strong> Add Product</strong></a></td>
                   <?php echo form_open("Agent/quotation"); ?>
-                  <td colspan="2">Extra Commission :<?php echo form_input(['type' => 'number', 'id' => 'commission', 'name' => 'comm', 'value' => '0']); ?><?php echo form_submit(['class' => 'btn btn-primary', 'type' => 'submit', 'value' => 'Update']); ?></td>
+                  <td colspan="3">Extra Commission :<?php echo form_input(['type' => 'text', 'id' => 'commission', 'name' => 'comm', 'value' => '0']); ?><?php echo form_submit(['class' => 'btn btn-primary', 'type' => 'submit', 'value' => 'Update']); ?></td>
                   </form>
                   <?php
                   $commi = $this->session->Commission;
@@ -167,8 +177,8 @@
                   if (!empty($commi)) {
                   ?>
 
-                    <td colspan="1" class=""><strong>Commission : <?php echo 'Rs ' . $rateAmt . '\-'; ?></strong></td>
-                    <td colspan="2" class=""><strong>Grand Total : <?php echo 'Rs ' . $commi . '\-'; ?></strong></td>
+                    <td colspan="1" class=""><strong>Commission : <?php echo 'Rs ' . number_format($rateAmt, 2) . '\-'; ?></strong></td>
+                    <td colspan="2" class=""><strong>Grand Total : <?php echo 'Rs ' . number_format($commi, 2) . '\-'; ?></strong></td>
                   <?php
                   } else {
                   ?>
@@ -176,8 +186,8 @@
                   <?php
                   }
                   ?>
-                  <td><button class="btn btn-primary view_detail">Add Payment Term</button></td>
-                  <td><a href="<?php echo site_url('Agent/quotation'); ?>" class="btn btn-success float-right"><strong> Continue To Quotation</strong></a></td>
+                  <td style=" white-space: nowrap;"><button class="btn btn-primary view_detail">Add Payment Term</button></td>
+                  <td style=" white-space: nowrap;"><a href="<?php echo site_url('Agent/quotation'); ?>" class="btn btn-success float-right"><strong> Continue To Quotation</strong></a></td>
                 </tr>
               </tfoot>
             </table>
@@ -233,6 +243,23 @@
         keyboard: true,
         show: true
       });
+    });
+  });
+  $(function() {
+    $("#example1").DataTable({
+      "responsive": true,
+      "lengthChange": false,
+      "autoWidth": false,
+      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    $('#example2').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false,
+      "responsive": true,
     });
   });
 </script>
