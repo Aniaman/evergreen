@@ -166,6 +166,7 @@ class Finance extends CI_Controller
   public function exportToExcel()
   {
     $projectId = $this->input->post('pid');
+	  $projectData = array();
     foreach ($projectId as $key => $value) {
       $projectData[$key]['payment'] = $this->gm->fetch_data('paymentreceived', array('projectId' => $value), array('paymentAmount', 'paymentDate'), array('paymentDate'));
       $projectData[$key]['projectData'] = $this->gm->fetch_single_data('project', array('projectId' => $value), array('projectId', 'customerId'));
