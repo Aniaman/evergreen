@@ -144,6 +144,7 @@ $route['Finance-DashBoard'] = 'Finance/dashboard';
 $route['Payment-Received'] = 'Finance/paymentAction';
 $route['Document-Received'] = 'Finance/documentUpload';
 $route['Quotation-Details'] = 'Finance/quotationDetails';
+$route['export-to-excel'] = 'Finance/exportToExcel';
 
 
 
