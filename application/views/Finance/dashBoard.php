@@ -1,6 +1,9 @@
 <?php
 include 'common/header.php';
 include 'navigation.php';
+if (isset($projectData)) {
+  $projectDataJson = json_encode($projectData);
+}
 ?>
 <div class="modal fade bd-example-modal-xl" id="view-modal" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel">
   <div class="modal-dialog" role="document">
@@ -153,6 +156,43 @@ include 'navigation.php';
   </div><!--end modal-dialog-->
 </div>
 
+<div class="modal fade bd-example-modal-xl" id="excel_export" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 class="modal-title m-0" id="myExtraLargeModalLabel">Project Data</h6>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" id="export-closes" aria-label="Close"></button>
+      </div><!--end modal-header-->
+      <div class="modal-body">
+        <div class="card">
+          <?= form_open('export-to-excel'); ?>
+          <div class="card-body">
+            <div class="table-responsive-sm">
+              <table class="table mb-0">
+                <thead>
+                  <tr>
+                    <th scope="col"><input type="checkbox" id="select-all"></th>
+                    <th scope="col">Project No</th>
+                    <th scope="col">Customer Name</th>
+                  </tr>
+                </thead>
+                <tbody id="projectData">
+                </tbody>
+              </table>
+            </div>
+
+          </div><!--end card-body-->
+        </div>
+      </div><!--end modal-body-->
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary btn-md">Export</button>
+        <button type="button" class="btn btn-soft-secondary btn-md" id="export-close" data-bs-dismiss="modal">Close</button>
+      </div><!--end modal-footer-->
+      <?= form_close(); ?>
+    </div><!--end modal-content-->
+  </div><!--end modal-dialog-->
+</div>
+
 <?php if ($error = $this->session->flashdata('success')) { ?>
   <div class="alert alert-success border-0" role="alert">
     <?php echo $error; ?>
@@ -185,9 +225,10 @@ if ($error = $this->session->flashdata('fail')) { ?>
       <div class="card-header">
         <div style="display: flex; ">
           <h3 class=" card-title">Project List</h3>
-          <form style="margin-left:83%"">
+          <form style="margin-left:78%"">
             <input type=" search" class="form-control" area-label="Search" name="" id="myInput" placeholder="search">
           </form>
+          <button class="excel_export_view btn btn-info" projectId="">Excel Export</i></button>
         </div><!--end card-header-->
       </div>
       <div class="card-body">
@@ -426,6 +467,7 @@ if ($error = $this->session->flashdata('fail')) { ?>
 
 
 
+
   $(document).ready(function() {
     $('#document-close').click(function() {
       document.getElementById('document-modal').setAttribute(`style`, `display:none`);
@@ -442,6 +484,56 @@ if ($error = $this->session->flashdata('fail')) { ?>
       $('#customerDocument').html("");
     })
   })
+
+
+  $(document).ready(function() {
+    $('.excel_export_view').click(function() {
+      var projectData = <?php echo  $projectDataJson ?>;
+      //console.log(projectData);
+      var tableData = "";
+      projectData.map((e) => {
+        tableData += `<tr class="table-success">
+                      <td><input type="checkbox" name="pid[]" id="" value ="${e.projectId}"></td> 
+                      <td>${e.projectId}</td> 
+                      <td>${e.EnquiryData.cName}</td> </tr>`
+
+      })
+      console.log(tableData);
+      $('#projectData').html(tableData);
+      document.getElementById('excel_export').setAttribute(`style`, `display:block`);
+      document.getElementById('excel_export').classList.add('show')
+
+    });
+  });
+
+
+
+
+  $(document).ready(function() {
+    $('#export-close').click(function() {
+      document.getElementById('excel_export').setAttribute(`style`, `display:none`);
+      $('#projectData').html("");
+    })
+  });
+
+
+
+
+  $(document).ready(function() {
+    $('#export-closes').click(function() {
+      document.getElementById('excel_export').setAttribute(`style`, `display:none`);
+      $('#projectData').html("");
+    })
+  });
+
+  $(document).ready(function() {
+    $('#select-all').click(function() {
+      var checked = this.checked;
+      $('input[type="checkbox"]').each(function() {
+        this.checked = checked;
+      });
+    })
+  });
 </script>
 <?php
 include 'common/footer.php'; ?>

@@ -162,6 +162,45 @@ class Finance extends CI_Controller
 
     $this->load->view('Finance/quotationDetails', $quotationData);
   }
+
+  public function exportToExcel()
+  {
+    $projectId = $this->input->post('pid');
+    foreach ($projectId as $key => $value) {
+      $projectData[$key]['payment'] = $this->gm->fetch_data('paymentreceived', array('projectId' => $value), array('paymentAmount', 'paymentDate'), array('paymentDate'));
+      $projectData[$key]['projectData'] = $this->gm->fetch_single_data('project', array('projectId' => $value), array('projectId', 'customerId'));
+      $projectData[$key]['customerData'] = $this->gm->fetch_single_data('customer', array('id' => $projectData[$key]['projectData']['customerId']), array('customerName', 'email', 'phone'));
+    }
+
+    $this->load->library("excel");
+    $object = new PHPExcel();
+    $object->setActiveSheetIndex(0);
+    $column = 0;
+    $object->getActiveSheet()->SetCellValue('A1',  'Payment Date');
+    $object->getActiveSheet()->SetCellValue('B1',  'Project No');
+    $object->getActiveSheet()->SetCellValue('C1',  'Customer Name');
+    $object->getActiveSheet()->SetCellValue('D1',  'Customer Email');
+    $object->getActiveSheet()->SetCellValue('E1',  'Customer Phone');
+    $object->getActiveSheet()->SetCellValue('F1',  'Payment');
+    $column++;
+
+    $excel_row = 2;
+    foreach ($projectData as $key => $row) {
+      foreach ($row['payment'] as $key => $value) {
+        $object->getActiveSheet()->SetCellValue('A' . $excel_row, $value['paymentDate']);
+        $object->getActiveSheet()->SetCellValue('B' . $excel_row, $row['projectData']['projectId']);
+        $object->getActiveSheet()->SetCellValue('C' . $excel_row, $row['customerData']['customerName']);
+        $object->getActiveSheet()->SetCellValue('D' . $excel_row, $row['customerData']['email']);
+        $object->getActiveSheet()->SetCellValue('E' . $excel_row, $row['customerData']['phone']);
+        $object->getActiveSheet()->setCellValue('F' . $excel_row, $value['paymentAmount']);
+        $excel_row = $excel_row + 1;
+      }
+    }
+    $object_writer = PHPExcel_IOFactory::createWriter($object, 'CSV');
+    header('Content-Type: application/vnd.ms-excel');
+    header('Content-Disposition: attachment;filename="finance details"' . date("d-m-Y") . '".csv"');
+    $object_writer->save('php://output');
+  }
 }
 
 function sendMail($projectData, $paymentData, $fromMail)
