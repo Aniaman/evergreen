@@ -171,7 +171,7 @@ class Agent extends CI_Controller
 
 		if ($added) {
 			$this->session->set_flashdata('add', 'Product Added Successful.');
-			$this->load->view('Agent/finalquote');
+			redirect('Agent/finalquote');
 		} else {
 			$this->session->set_flashdata('error', 'Product Not Added.');
 			redirect('Agent/geneQuote');
