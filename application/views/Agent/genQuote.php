@@ -59,7 +59,7 @@ $Agid = $this->session->agent_id;
     <div class="card-body table-responsive ">
       <?php echo form_open('Agent/AddProduct'); ?>
 
-      <table class="table table-head-fixed text-nowrap">
+      <table class="table table-head-fixed text-nowrap filter-table-data">
         <thead class="text-center">
           <tr id="statusVal">
             <th></th>
